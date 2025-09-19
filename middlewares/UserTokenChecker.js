@@ -18,16 +18,17 @@ function  UserAuthenticationHandler(req,res,next){
                     }
                 }
             );    
+        } else {
+            res.code=1005,
+            next();
         }
         
     } else{
         res.code=1005,
         next();
     }
-        // return res.send({code:1005,msg:"Goto user login"});
 }
 async function userPreDataHandler(req,res,next) {
-    // next()
     const { token }=req.body;
     
     if(token){
@@ -38,7 +39,6 @@ async function userPreDataHandler(req,res,next) {
                     res.status(404).send({code:1004,msg:"Token verification failed...",error:err})
                 }else{
                     req.user=user;
-                    // console.log(user)
                     next();
                 }
             }

@@ -52,7 +52,8 @@ async function UserLoginHandler(req,res) {
         const {token}= req.body;
         await User.findOne({
             userName: userName
-        }).select("-password -userId -_id -__v").then((user)=>{
+        }).select("-password -userId -_id -__v")
+        .then((user)=>{
         
             return res.send({token:token,data:user,code:1002,msg:"User login successful"});
         }).catch((err)=>{
