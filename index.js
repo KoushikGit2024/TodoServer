@@ -14,8 +14,7 @@ const UserRoute = require('./routes/userRoute');
 const BaseRoute = require('./routes/baseRoute');
 const { UserAuthenticationHandler, userPreDataHandler } = require('./middlewares/UserTokenChecker');
 
-run().catch(console.dir);
-// ConnectDb("mongodb+srv://chidanand013:Panchaks_2047@cluster0.72hsoip.mongodb.net/TodoList?retryWrites=true&w=majority&ssl=true&appName=Cluster0");
+ConnectDb();
 
 app.use(cors({
     origin:"http://localhost:5173/",

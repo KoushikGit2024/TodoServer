@@ -1,8 +1,8 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const { User } = require('../models/userSchema');
 
-function  UserAuthenticationHandler(req,res,next){
-    
+async function  UserTokenHandler(req,res,next){
     if(req.body){
         const { token }=req.body;
         if(token){
@@ -10,8 +10,7 @@ function  UserAuthenticationHandler(req,res,next){
                 async (err, user) => {
                     if (err) {
                         req.error=err.name;
-                        next()
-                        // res.status(404).send({code:1004,msg:"Some error occured",error:err})
+                        next();
                     }else{
                         req.user=user;
                         next();
@@ -48,6 +47,6 @@ async function userPreDataHandler(req,res,next) {
     }
 }
 module.exports={
-    UserAuthenticationHandler,
+    UserTokenHandler,
     userPreDataHandler,
 }

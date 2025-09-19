@@ -12,13 +12,15 @@ async function domainChecker(req,res) {
                 return res.send({msg:"Domain name unavailable"});
             else
                 return res.send({msg:"Domain name available"})
-        })
-        
+        })   
     }
+    else
+        res.send(null);
 }
 async function UserSignupHandler(req,res) {
     const {fullName,password,email,userName,token} = req.body
     try {
+        // console.log(req.body)
         const user =await User.findOne({
             $or:[
                 {email:email},
@@ -41,23 +43,25 @@ async function UserSignupHandler(req,res) {
             });
         }  
     } catch (error) {
-        return res.send({code:1004,msg:"User signup failed...."})
+        // console.log(error)
+        return res.status(404).send({code:1004,msg:"User signup failed...."})
     }
         
 }
 async function UserLoginHandler(req,res) {
-    
     if(req.user){
         const {userName} = req.user;
         const {token}= req.body;
+        // console.log(req.user)
         await User.findOne({
             userName: userName
         }).select("-password -userId -_id -__v")
         .then((user)=>{
-        
+            // console.log(user)
             return res.send({token:token,data:user,code:1002,msg:"User login successful"});
         }).catch((err)=>{
-            return res.status(404).send({code:1004,msg:"User login failed",error:err});
+            // console.log(err);
+            return res.status(404).send({code:1004,msg:"User login failed.....",error:err});
         });
     } else{
         if(req.body){
@@ -82,14 +86,13 @@ async function UserLoginHandler(req,res) {
                 return res.json({token:token,data:user,code:1002,msg:"User Login successful"});
             })
             .catch((err)=>{
-                console.log(err)
+                // console.log(err)
                 return res.status(404).json({code:10041,msg:"Some error occured",error:err});
             })    
         }
         else{
             return res.status(404).json({code:10041,msg:"No parameters received"});
         }
-        
     }
 }
 module.exports={
