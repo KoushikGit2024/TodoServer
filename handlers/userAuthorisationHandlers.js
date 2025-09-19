@@ -59,30 +59,36 @@ async function UserLoginHandler(req,res) {
             return res.status(404).send({code:1004,msg:"User login failed",error:err});
         });
     } else{
-        const {authParam,password} = req.body;
-        await User.findOne({
-            $and: [
-                { $or: [{ email: authParam }, { userName: authParam }] },
-                { password: password }
-            ]
-        })
-        .select("-password -userId -_id -__v")
-        .then((user)=>{
-            const token = jwt.sign(
-                {
-                    userName:user.userName,
-                    fullName:user.fullName,
-                    email:user.email,
-                },
-                process.env.USER_AUTHENTICATION_SECRET_KEY_JSONWEBTOKEN,
-                {expiresIn:"1d"}
-            )
-            return res.json({token:token,data:user,code:1002,msg:"User Login successful"});
-        })
-        .catch((err)=>{
-            console.log(err)
-            return res.status(404).json({code:10041,msg:"Some error occured",error:err});
-        })
+        if(req.body){
+            const {authParam,password} = req.body;
+            await User.findOne({
+                $and: [
+                    { $or: [{ email: authParam }, { userName: authParam }] },
+                    { password: password }
+                ]
+            })
+            .select("-password -userId -_id -__v")
+            .then((user)=>{
+                const token = jwt.sign(
+                    {
+                        userName:user.userName,
+                        fullName:user.fullName,
+                        email:user.email,
+                    },
+                    process.env.USER_AUTHENTICATION_SECRET_KEY_JSONWEBTOKEN,
+                    {expiresIn:"1d"}
+                )
+                return res.json({token:token,data:user,code:1002,msg:"User Login successful"});
+            })
+            .catch((err)=>{
+                console.log(err)
+                return res.status(404).json({code:10041,msg:"Some error occured",error:err});
+            })    
+        }
+        else{
+            return res.status(404).json({code:10041,msg:"No parameters received"});
+        }
+        
     }
 }
 module.exports={

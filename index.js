@@ -9,11 +9,12 @@ const PORT=process.env.PORT||7400;
 
 const {User} = require('./models/userSchema');
 const { Task,subTask } = require('./models/taskSchema');
-const {ConnectDb} = require('./connection');
+const {run,ConnectDb} = require('./connection');
 const UserRoute = require('./routes/userRoute');
 const BaseRoute = require('./routes/baseRoute');
 const { UserAuthenticationHandler, userPreDataHandler } = require('./middlewares/UserTokenChecker');
 
+// run().catch(console.dir);
 ConnectDb("mongodb+srv://chidanand013:Panchaks_2047@cluster0.72hsoip.mongodb.net/TodoList?retryWrites=true&w=majority&ssl=true&appName=Cluster0");
 
 app.use(cors({
