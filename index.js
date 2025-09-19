@@ -29,7 +29,7 @@ app.use('/api/baseroute',BaseRoute);
 app.use('/api/user',userPreDataHandler,UserRoute);
 
 app.get('/',(req,res)=>{
-    res.send({msg:"Hello"});
+    res.send("Hello");
 });
 
 
