@@ -18,7 +18,7 @@ ConnectDb("mongodb+srv://chidanand013:Panchaks_2047@cluster0.72hsoip.mongodb.net
 
 app.use(cors({
     origin:"http://localhost:5173/",
-    credentials: true
+    credentials: true,
 }));
 
 app.use(cookieParser());
@@ -27,6 +27,10 @@ app.use(express.urlencoded({extended: true}));
 
 app.use('/api/baseroute',BaseRoute);
 app.use('/api/user',userPreDataHandler,UserRoute);
+
+app.get('/',(req,res)=>{
+    res.send({msg:"Hello"});
+});
 
 
 

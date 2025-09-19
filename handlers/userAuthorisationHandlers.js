@@ -77,11 +77,11 @@ async function UserLoginHandler(req,res) {
                 process.env.USER_AUTHENTICATION_SECRET_KEY_JSONWEBTOKEN,
                 {expiresIn:"1d"}
             )
-            return res.send({token:token,data:user,code:1002,msg:"User Login successful"});
+            return res.json({token:token,data:user,code:1002,msg:"User Login successful"});
         })
         .catch((err)=>{
             console.log(err)
-            return res.status(404).send({code:10041,msg:"Some error occured",error:err});
+            return res.status(404).json({code:10041,msg:"Some error occured",error:err});
         })
     }
 }
