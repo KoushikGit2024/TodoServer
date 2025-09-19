@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../models/userSchema');
 
 async function  UserTokenHandler(req,res,next){
+    console.log(req.body,"hello");
     if(req.body){
         const { token }=req.body;
         if(token){
@@ -19,6 +20,7 @@ async function  UserTokenHandler(req,res,next){
             );    
         } else {
             res.code=1005,
+            console.log("k1")
             next();
         }
         
