@@ -3,17 +3,20 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../models/userSchema');
 
 async function  UserTokenHandler(req,res,next){
-    console.log(req.body,"hello");
+    // console.log(req.body,"hello");
     if(req.body){
-        const { token }=req.body;
+        const token=req.cookies.UserValidationToken;
+        // console.log(token);
         if(token){
             jwt.verify(token, process.env.USER_AUTHENTICATION_SECRET_KEY_JSONWEBTOKEN,
                 async (err, user) => {
                     if (err) {
                         req.error=err.name;
+                        console.log("k2")
                         next();
                     }else{
                         req.user=user;
+                        console.log("k3")
                         next();
                     }
                 }
@@ -30,7 +33,7 @@ async function  UserTokenHandler(req,res,next){
     }
 }
 async function userPreDataHandler(req,res,next) {
-    const { token }=req.body;
+    const token=req.cookies.UserValidationToken;
     
     if(token){
         jwt.verify(token, process.env.USER_AUTHENTICATION_SECRET_KEY_JSONWEBTOKEN,

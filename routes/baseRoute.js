@@ -8,6 +8,6 @@ BaseRoute.route('/signup')
     .get(domainChecker)
     .post(UserSignupHandler);
 
-BaseRoute.get('/login',UserTokenHandler,UserLoginHandler)
+BaseRoute.post('/login',UserTokenHandler,UserLoginHandler)
 
 module.exports = BaseRoute;

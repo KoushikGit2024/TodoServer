@@ -1,5 +1,4 @@
 const jwt=require('jsonwebtoken')
-
 const {v4:uuidv4}= require('uuid');
 const {User} =require('../models/userSchema')
 async function domainChecker(req,res) {
@@ -54,29 +53,44 @@ async function UserSignupHandler(req,res) {
 }
 async function UserLoginHandler(req,res) {
     console.log(req.body);
+    const {authParam,password} = req.body;
+    const user = req.user;
+    console.log(authParam,password)
+    let userName=req.user?.userName;
+    if(user&&(!(authParam&&password)||(authParam===user.userName||authParam===user.email))){
+        userName=req.user.userName;
+    }
+    else{
+        req.user=null;
+    }
+    console.log(req.user)
     if(req.user){
-        const {userName} = req.user;
-        const {token}= req.body;
-        // console.log(req.user)
+        
+        const {token}= req.cookies.UserValidationToken;
+        
+        console.log("b1")
         try {
-            const user = await User.findOne({
-                            userName: userName
-                        }).select("-password -userId -_id -__v");// console.log(user)
+            const user = await User.findOneAndUpdate(
+                        { userName: userName },
+                        { $push: { logTime: new Date() } },
+                        { new: true } // returns updated doc
+                        ).select("-password -userId -_id -__v");// console.log(user)
             return res.send({token:token,data:user,code:1002,msg:"User login successful"});
         } catch (error) {// console.log(err);
             return res.status(404).send({code:1004,msg:"User login failed.....",error:error});
         }
     } else{
         if(req.body){
-            const {authParam,password} = req.body.params;
+            // console.log(req.cookies)
             try {
-                const user=await User.findOne({
+                const user=await User.findOneAndUpdate({
                                 $and: [
                                     { $or: [{ email: authParam }, { userName: authParam }] },
                                     { password: password }
                                 ]
-                            })
-                            .select("-password -userId -_id -__v");
+                            },{ $push: { logTime: new Date() } },
+                            { new: true } // returns updated doc
+                            ).select("-password -userId -_id -__v");;
                 const token = jwt.sign(
                     {
                         userName:user.userName,
@@ -86,9 +100,14 @@ async function UserLoginHandler(req,res) {
                     process.env.USER_AUTHENTICATION_SECRET_KEY_JSONWEBTOKEN,
                     {expiresIn:"1d"}
                 )
+                console.log("b2")
+                res.cookie('UserValidationToken',token,{
+                    httpOnly: false,  // prevents JS access
+                    secure: false,   // set true if using HTTPS
+                    sameSite: "lax",})
                 return res.json({token:token,data:user,code:1002,msg:"User Login successful"});
             } catch (error) {
-                return res.status(404).json({code:10041,msg:"Some error occured",error:error});
+                return res.status(404).json({code:10041,msg:"Failed to fetch user data....",error:error});
             }
         }
         else{
