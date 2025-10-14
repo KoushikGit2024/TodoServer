@@ -17,15 +17,15 @@ UserRoute.use(express.json())
 //     res.send(user)
 // })
 
-UserRoute.route('/:username/todos/:worklist')
+UserRoute.route('/tasks/worklist')
     .get(getUserTasks)
     .post(addNewTask)
     .patch(updateTask)
     .delete(deleteTask);
 
-UserRoute.get('/:username/todos',searchHandler);
+UserRoute.get('/tasks',searchHandler);
 
-UserRoute.route('/:username/profile')
+UserRoute.route('/profile')
     .get(fetchUserData)
     .patch(updateUserData)
 

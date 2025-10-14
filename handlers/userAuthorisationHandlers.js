@@ -4,23 +4,24 @@ const {User} =require('../models/userSchema')
 async function domainChecker(req,res) {
     if(req.query.search){
         const entered=req.query.search;
+        // console.log(entered)
         try {
             const sr=await User.findOne({
                 userName:entered,
             });
             if(sr)
-                return res.send({msg:"Domain name unavailable"});
+                return res.send({code:100,msg:"Domain name unavailable"});
             else
-                return res.send({msg:"Domain name available"})
+                return res.send({code:101,msg:"Domain name available"})
         } catch (error) {
-            res.send({msg:"Error during avalaiblity check..."});
+            return res.send({code:104,msg:"Error during avalaiblity check..."});
         }  
     }
     else
         res.send(null);
 }
 async function UserSignupHandler(req,res) {
-    const {fullName,password,email,userName,token} = req.body
+    const {fullName,password,email,userName,profileImg,mobile} = req.body
     try {
         // console.log(req.body)
         const user =await User.findOne({
@@ -32,6 +33,7 @@ async function UserSignupHandler(req,res) {
         if(user){
             return res.send({code:1001,msg:"User already registered"});
         } else {
+            // console.log(req.body)
             try {
                 const newUser=await User.create({
                                 userId:uuidv4(),
@@ -39,42 +41,43 @@ async function UserSignupHandler(req,res) {
                                 email:email,
                                 password:password,
                                 userName:userName,
+                                mobile:mobile,
+                                profileImg:profileImg,
                             });
-                return res.send({token:null,code:1000,msg:"User signup successful"});
+                return res.send({code:1000,msg:"User signup successful"});
             } catch (error) {
                 return res.status(404).send({code:1004,msg:"Unable to signup....",error:error});
             }
         }  
     } catch (error) {
-        // console.log(error)
         return res.status(404).send({code:1004,msg:"User signup failed...."})
     }
-        
 }
 async function UserLoginHandler(req,res) {
-    console.log(req.body);
+    // console.log(req.body);
     const {authParam,password} = req.body;
-    const user = req.user;
-    console.log(authParam,password)
+    // console.log(req.cookies);
+    const user = req;
+    // console.log(authParam,password)
     let userName=req.user?.userName;
     if(user&&(!(authParam&&password)||(authParam===user.userName||authParam===user.email))){
-        userName=req.user.userName;
+        userName=req.user?.userName;
     }
     else{
         req.user=null;
     }
-    console.log(req.user)
+    // console.log(req.user)
     if(req.user){
-        
         const {token}= req.cookies.UserValidationToken;
-        
-        console.log("b1")
+        // console.log("b1")
         try {
             const user = await User.findOneAndUpdate(
                         { userName: userName },
                         { $push: { logTime: new Date() } },
                         { new: true } // returns updated doc
-                        ).select("-password -userId -_id -__v");// console.log(user)
+                        ).select("-password -userId -_id -__v -logTime");// console.log(user)
+            if(!user)
+                return res.status(404).send({code:1004,msg:"User login failed.....",error:"Unable to find document"});
             return res.send({token:token,data:user,code:1002,msg:"User login successful"});
         } catch (error) {// console.log(err);
             return res.status(404).send({code:1004,msg:"User login failed.....",error:error});
@@ -90,7 +93,9 @@ async function UserLoginHandler(req,res) {
                                 ]
                             },{ $push: { logTime: new Date() } },
                             { new: true } // returns updated doc
-                            ).select("-password -userId -_id -__v");;
+                            ).select("-password -userId -_id -__v -logTime");;
+                if(!user)
+                    return res.status(404).send({code:1004,msg:"User login failed.....",error:"Unable to find document"});
                 const token = jwt.sign(
                     {
                         userName:user.userName,
@@ -98,9 +103,9 @@ async function UserLoginHandler(req,res) {
                         email:user.email,
                     },
                     process.env.USER_AUTHENTICATION_SECRET_KEY_JSONWEBTOKEN,
-                    {expiresIn:"1d"}
+                    {expiresIn:"30d"}
                 )
-                console.log("b2")
+                // console.log("b2")
                 res.cookie('UserValidationToken',token,{
                     httpOnly: false,  // prevents JS access
                     secure: false,   // set true if using HTTPS

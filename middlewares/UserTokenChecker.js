@@ -10,20 +10,21 @@ async function  UserTokenHandler(req,res,next){
         if(token){
             jwt.verify(token, process.env.USER_AUTHENTICATION_SECRET_KEY_JSONWEBTOKEN,
                 async (err, user) => {
+                // console.log(user)
                     if (err) {
                         req.error=err.name;
-                        console.log("k2")
+                        // console.log("k2")
                         next();
                     }else{
                         req.user=user;
-                        console.log("k3")
+                        // console.log("k3")
                         next();
                     }
                 }
             );    
         } else {
             res.code=1005,
-            console.log("k1")
+            // console.log("k1")
             next();
         }
         

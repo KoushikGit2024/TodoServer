@@ -24,14 +24,15 @@ const subTask = new mongoose.Schema({
 const taskSchema = new mongoose.Schema({
     createdById:{
         type: mongoose.Types.UUID,
-        // required: true
+        required: true
     },
     createdByName:{
         type: String,
+        required: true,
     },
     title:{
         type: String,
-        // required: true,
+        required: true,
     },
     description:{
         type: String,
@@ -50,11 +51,19 @@ const taskSchema = new mongoose.Schema({
     ],
     listType:{
         type: String,
-        default: "*"
+        default: "all"
+    },
+    marked:{
+        type:Boolean,
+        default:false,
     },
     deleted:{
         type: Boolean,
         default: false
+    },
+    endTime:{
+        type:Date,
+        required: true,
     }
 },{timestamps:true});
 
