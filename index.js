@@ -17,7 +17,7 @@ const { UserAuthenticationHandler, userPreDataHandler } = require('./middlewares
 ConnectDb();
 
 app.use(cors({
-    origin:"http://localhost:5173",
+    origin:"https://todofrontend-t9qq.onrender.com",
     credentials: true,
 }));
 
