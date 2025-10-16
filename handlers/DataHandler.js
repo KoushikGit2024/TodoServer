@@ -3,7 +3,8 @@ const { Task } = require('../models/taskSchema');
 const { User } = require('../models/userSchema');
 
 const getUserTasks = async (req,res)=>{
-    const worklist=req.query.worklist;
+    const {worklist,pageno}=req.query;
+    // console.log(pageno)
     const user =req.user.userName;
     try {
         let tasks=[];
@@ -12,12 +13,12 @@ const getUserTasks = async (req,res)=>{
                 createdByName: user,
                 listType:worklist,
                 deleted: false,
-            }).select('-createdById').sort({createdAt:-1});
+            }).select('-createdById').sort({createdAt:-1}).skip(5*pageno).limit(5);
         } else {
             tasks=await Task.find({
                 createdByName: user,
                 deleted: false,
-            }).select('-createdById').sort({createdAt:-1});
+            }).select('-createdById').sort({createdAt:-1}).skip(5*pageno).limit(5);
         }
         if(tasks.length===0)
             return res.send({code:201,tasks:tasks,msg:'No task listed yet....'});
@@ -74,7 +75,7 @@ const updateTask = async (req, res) => {
     try {
         const task = await Task.findOneAndUpdate(
             { _id: taskId, deleted: false },
-            { $set: { updateBlock } },
+            { $set: { ...updateBlock } },
             { new: true }
         );
 
@@ -82,7 +83,7 @@ const updateTask = async (req, res) => {
             return res.status(404).send({ code: 1005, msg: "Task not found" });
         }
 
-        res.send({ code: 2001, msg: "Task updated...", updated:true });
+        res.send({ code: 2001, msg: "Task updated...", updated:true,task:task });
     } catch (error) {
         res.status(500).send({ code: 1004, msg: "Some error occurred...", error });
     }
