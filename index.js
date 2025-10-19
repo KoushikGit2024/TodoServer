@@ -17,8 +17,8 @@ const { UserAuthenticationHandler, userPreDataHandler } = require('./middlewares
 ConnectDb();
 
 app.use(cors({
-    // origin:"https://todofrontend-t9qq.onrender.com",
-    // credentials: true,
+    origin:["https://todofrontend-t9qq.onrender.com","http://localhost:5173"],
+    credentials: true,
 }));
 
 app.use(cookieParser());
