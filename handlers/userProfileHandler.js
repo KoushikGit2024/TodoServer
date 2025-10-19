@@ -27,10 +27,12 @@ const fetchUserData = async (req, res) => {
 
 
 const updateUserData = async (req, res) => {
+    const {updateBlock}=req.body
+    console.log(req.user)
   try {
     const updatedUser = await User.findOneAndUpdate(
-      { userName: req.params.username },
-      { $set: req.body },
+      { userName: req.user.userName },
+      { $set: {...updateBlock} },
       { new: true }
     );
 
@@ -45,6 +47,7 @@ const updateUserData = async (req, res) => {
       code: 1011,
       msg: 'User data updated successfully',
       user: updatedUser,
+      updated:true
     });
   } catch (error) {
     res.status(500).send({

@@ -53,6 +53,7 @@ async function UserSignupHandler(req, res) {
         }
 
     } catch (error) {
+        console.log(error)
         return res.status(404).send({ code: 1004, msg: "User signup failed...." });
     }
 }
