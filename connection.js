@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const uri =`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.72hsoip.mongodb.net/TodoList?retryWrites=true&w=majority&ssl=true&appName=Cluster0`;
+const uri ='mongodb://localhost:27017/TodoList' //`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.72hsoip.mongodb.net/TodoList?retryWrites=true&w=majority&ssl=true&appName=Cluster0`;
 
 async function ConnectDb() {
   try {

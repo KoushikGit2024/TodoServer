@@ -1,32 +1,33 @@
+// routes/userRoutes.js
 const express = require('express');
-const { User } = require('../models/userSchema');
-const jwt = require('jsonwebtoken');
-const { Task } = require('../models/taskSchema');
-const { getUserTasks, addNewTask, updateTask, deleteTask, searchHandler } = require('../handlers/DataHandler');
-const { fetchUserData, updateUserData } = require('../handlers/userProfileHandler');
+const {
+  getUserTasks,
+  addNewTask,
+  updateTask,
+  deleteTask,
+  searchHandler,
+} = require('../handlers/DataHandler');
+const {
+  fetchUserData,
+  updateUserData,
+} = require('../handlers/userProfileHandler');
 
 const UserRoute = express.Router();
-UserRoute.use(express.json())
 
-// UserRoute.get('/',async (req,res)=>{
-//     // const {token}= req.body;
-//     const decoded = req.user;
-//     const user = await User.findOne({
-//         email:decoded.email,
-//     })
-//     res.send(user)
-// })
+UserRoute.use(express.json());
 
+// Task routes
 UserRoute.route('/tasks/worklist')
-    .get(getUserTasks)
-    .post(addNewTask)
-    .patch(updateTask)
-    .delete(deleteTask);
+  .get(getUserTasks)
+  .post(addNewTask)
+  .patch(updateTask)
+  .delete(deleteTask);
 
-UserRoute.get('/tasks',searchHandler);
+UserRoute.get('/tasks', searchHandler);
 
+// Profile routes
 UserRoute.route('/profile')
-    .get(fetchUserData)
-    .patch(updateUserData)
+  .get(fetchUserData)
+  .patch(updateUserData);
 
-module.exports= UserRoute;
+module.exports = UserRoute;
