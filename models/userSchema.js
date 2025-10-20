@@ -50,7 +50,7 @@ const userSchema = new mongoose.Schema(
           },
         ],
         default: [
-          null,
+          {a:'1'},
         ],
       },
     },
