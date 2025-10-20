@@ -49,16 +49,13 @@ const userSchema = new mongoose.Schema(
             clr4: String,
           },
         ],
-        default: [
-          {a:'1'},
-        ],
+        default: [],
       },
     },
-    logTime: [
-      {
-        type: Date,
-      },
-    ],
+    logTime: {
+      type: [Date],
+      default: [],
+    },
     profileImg: {
       type: String,
       default: '',
