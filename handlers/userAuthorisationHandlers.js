@@ -136,11 +136,11 @@ async function UserLoginHandler(req, res) {
                     { expiresIn: "30d" }
                 );
 
-                res.cookie('UserValidationToken', token, {
-                    httpOnly: false,
-                    secure: false,
-                    sameSite: "lax",
-                });
+                // res.cookie('UserValidationToken', token, {
+                //     httpOnly: false,
+                //     secure: false,
+                //     sameSite: "lax",
+                // });
 
                 return res.json({
                     token: token,
