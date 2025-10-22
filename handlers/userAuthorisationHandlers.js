@@ -60,7 +60,7 @@ async function UserSignupHandler(req, res) {
 
 async function UserLoginHandler(req, res) {
     const { authParam, password } = req.body;
-    const user = req;
+    const user = req.user;
 
     let userName = req.user?.userName;
 
@@ -69,7 +69,7 @@ async function UserLoginHandler(req, res) {
     } else {
         req.user = null;
     }
-
+    console.log(req.body)
     // -------- If user is already validated --------
     if (req.user) {
         const { token } = req.cookies.UserValidationToken;
