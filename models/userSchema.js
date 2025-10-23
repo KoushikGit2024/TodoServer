@@ -35,23 +35,6 @@ const userSchema = new mongoose.Schema(
       required: true,
       default: 'general',
     },
-    colorTheme: {
-      currentTheme: {
-        type: Number,
-        default: 0,
-      },
-      themes: {
-        type: [
-          {
-            clr1: String,
-            clr2: String,
-            clr3: String,
-            clr4: String,
-          },
-        ],
-        default: [],
-      },
-    },
     logTime: {
       type: [Date],
       default: [],
