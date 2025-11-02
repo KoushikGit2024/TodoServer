@@ -40,6 +40,7 @@ app.use(cors({
     origin: [
         "https://todofrontend-t9qq.onrender.com",
         "https://todo-frontend-sage-two.vercel.app",
+        "https://remidos.onrender.com"
     ],
     credentials: true,
 }));
